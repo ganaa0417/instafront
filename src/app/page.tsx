@@ -19,6 +19,7 @@ import Image from "next/image";
 import { CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { Heart } from "lucide-react";
+import { Button } from "@/components/ui/button";
 export default function Home() {
   const [post, setPost] = useState<PostType[]>([]);
   const { token } = useUser();
@@ -49,6 +50,18 @@ export default function Home() {
       },
     });
   };
+  const follow = async (followedUserId: string) => {
+    const res = await fetch(
+      `http://localhost:8000/toggleFollow/${followedUserId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  };
   useEffect(() => {
     if (token) {
       pos();
@@ -64,11 +77,14 @@ export default function Home() {
         {post?.map((posts, index) => (
           <div
             key={index}
+           
             className="bg-white border border-gray-200 rounded-md mb-6 shadow-sm"
+            
           >
             <div className="flex items-center p-4">
               <div className="bg-gray-300 w-10 h-10 rounded-full mr-3" />
               <p className="font-semibold text-sm">{posts?.userId.username}</p>
+              <Button onClick={() => follow(posts._id)}>follow</Button>
             </div>
             <img
               src={posts?.images?.[0]}

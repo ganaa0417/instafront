@@ -4,9 +4,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useUser } from "@/app/providers/AuthContext";
 import { useRouter } from "next/navigation";
+import { ChangeEvent, useState } from "react";
 const Page = () => {
   const { setUser, user } = useUser();
   const { push } = useRouter();
+  const [inputValue, setInputvalue] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const input = (event: ChangeEvent<HTMLInputElement>) => {
+    const name = event.target.name;
+    if (name === "email") {
+      setInputvalue({ ...inputValue, email: event.target.value });
+    } else if (name === "password") {
+      setInputvalue({ ...inputValue, password: event.target.value });
+    }
+  };
   const login = async () => {
     const response = await fetch("http://localhost:8000/login", {
       method: "POST",
@@ -14,8 +28,8 @@ const Page = () => {
         "Content-type": "application/json",
       },
       body: JSON.stringify({
-        email: "gnbn@gmail.com",
-        password: "ganaa876",
+        email: inputValue.email,
+        password: inputValue.password,
       }),
     });
     const token = await response.json();
@@ -75,9 +89,9 @@ const Page = () => {
         </div>
       </div> */}
       <div>
-        <Input ></Input>
-        <Input></Input>
-      <Button onClick={login}></Button>
+        <Input onChange={input} name="email"></Input>
+        <Input onChange={input} name="password"></Input>
+        <Button onClick={login}></Button>
       </div>
     </div>
   );

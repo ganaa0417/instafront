@@ -13,7 +13,6 @@ export default function Page() {
   const [imgurl, setimgurl] = useState("");
   const [loading, setloading] = useState(false);
   const HF_API_KEY = process.env.HF_API_KEY;
-
   const imageGenerator = async () => {
     if (!prompt.trim()) return;
     setloading(true);
